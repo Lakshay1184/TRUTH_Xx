@@ -11,6 +11,7 @@ import math
 import os
 import re
 import subprocess
+import sys
 import tempfile
 import time
 from contextlib import asynccontextmanager
@@ -336,7 +337,8 @@ def extract_video_metadata(video_path: str) -> dict:
 
     # Fallback to FFmpeg stderr parsing
     logger.info("Using FFmpeg fallback for metadata extraction")
-    return _extract_metadata_ffmpeg_fallback(video_path)
+    res = _extract_metadata_ffmpeg_fallback(video_path)
+    return res if res else None
 
 
 def _generate_drift_data(video_path: str, duration: float, metadata: dict) -> list[dict]:
@@ -448,27 +450,70 @@ async def lifespan(application: FastAPI):
 
     cfg = _load_config()
     _models["config"] = cfg
-    
-    # Load ML models (mocked for robust startup if missing)
+
+    # Ensure the backend directory is on sys.path so model imports resolve
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
+    if backend_dir not in sys.path:
+        sys.path.insert(0, backend_dir)
+
+    # Ensure data/processed exists for temp files
+    os.makedirs(os.path.join(backend_dir, "data", "processed"), exist_ok=True)
+
+    # Load each ML model independently — one failure should not block others
+    class _Mock:
+        def predict(self, *a, **kw): return {"confidence": 0.05, "label": "real"}
+        def search(self, *a, **kw): return []
+
+    loaded = []
+    logger.info("Loading ML models (this may take a minute on first run)...")
+
+    # Video deepfake detector
     try:
         from models.video.deepfake_detector import VideoDeepfakeDetector
-        from models.audio.synthetic_voice_detector import SyntheticVoiceDetector
-        from models.text.ai_text_detector import TextAIDetector
-        from services.faiss_service import FAISSSearch
-
         _models["video"] = VideoDeepfakeDetector()
-        _models["audio"] = SyntheticVoiceDetector()
-        _models["text"] = TextAIDetector()
-        _models["faiss"] = FAISSSearch()
-    except ImportError:
-        logger.warning("ML models missing — using mocks.")
-        class _Mock:
-            def predict(self, *a, **kw): return {"confidence": 0.05, "label": "real"}
-            def search(self, *a, **kw): return []
+        loaded.append("video")
+        logger.info("  ✓ VideoDeepfakeDetector loaded")
+    except Exception as exc:
+        logger.warning("  ✗ VideoDeepfakeDetector failed: %s", exc)
         _models["video"] = _Mock()
+
+    # Audio synthetic voice detector (stub in upstream repo)
+    try:
+        from models.audio.synthetic_voice_detector import SyntheticVoiceDetector
+        _models["audio"] = SyntheticVoiceDetector()
+        loaded.append("audio")
+        logger.info("  ✓ SyntheticVoiceDetector loaded")
+    except Exception as exc:
+        logger.warning("  ✗ SyntheticVoiceDetector skipped (stub): %s", exc)
         _models["audio"] = _Mock()
-        _models["text"]  = _Mock()
+
+    # Text AI detector
+    try:
+        from models.text.ai_text_detector import TextAIDetector
+        _models["text"] = TextAIDetector()
+        loaded.append("text")
+        logger.info("  ✓ TextAIDetector loaded")
+    except Exception as exc:
+        logger.warning("  ✗ TextAIDetector failed: %s", exc)
+        _models["text"] = _Mock()
+
+    # FAISS article search
+    try:
+        from services.faiss_service import FAISSSearch
+        _models["faiss"] = FAISSSearch(
+            articles_path=os.path.join(backend_dir, "data", "articles.json"),
+            index_path=os.path.join(backend_dir, "data", "embeddings.npy"),
+            metadata_path=os.path.join(backend_dir, "data", "faiss_metadata.pkl"),
+        )
+        loaded.append("faiss")
+        logger.info("  ✓ FAISSSearch loaded")
+    except Exception as exc:
+        logger.warning("  ✗ FAISSSearch failed: %s", exc)
         _models["faiss"] = _Mock()
+
+    _models["_real"] = len(loaded) > 0
+    _models["_loaded"] = loaded
+    logger.info("Models loaded: %s (%d/%d)", ", ".join(loaded) if loaded else "none", len(loaded), 4)
 
     logger.info("API ready ✓")
     yield
@@ -497,55 +542,185 @@ async def analyze(
         raise HTTPException(400, "Provide video or text.")
 
     cfg = _models["config"]
+    backend_dir = os.path.dirname(os.path.abspath(__file__))
     metadata = {}
     risk_assessment = None
     drift_data = []
+    video_analysis = None
+    audio_analysis = None
+    text_analysis = None
+    related_articles = None
 
     # ── Video Processing ────────────────────────────────────────────────
     if video is not None:
-        temp_os_dir = cfg.get("temp_dir", "temp")
+        temp_os_dir = os.path.join(backend_dir, cfg.get("temp_dir", "data/processed"))
         os.makedirs(temp_os_dir, exist_ok=True)
         suffix = os.path.splitext(video.filename or ".mp4")[1]
-        
-        # Determine output file path first to ensure we close handle
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, dir=temp_os_dir) as tmp:
             tmp.write(await video.read())
             video_path = tmp.name
 
         try:
-            # Metadata
+            # --- Metadata extraction ---
             t0 = time.perf_counter()
             metadata = extract_video_metadata(video_path)
             metadata["original_filename"] = video.filename
             logger.info("Metadata extraction %.2fs", time.perf_counter() - t0)
 
-            # Risk Assessment
+            # --- ML deepfake detection on frames ---
+            try:
+                from utils.preprocessing import extract_frames
+                frame_rate = cfg.get("video", {}).get("frame_sample_rate", 1)
+                logger.info("Extracting frames at %s fps for ML analysis...", frame_rate)
+                frames = extract_frames(video_path, target_fps=frame_rate)
+
+                t0 = time.perf_counter()
+                video_analysis = _models["video"].predict(frames)
+                logger.info("Video ML inference done in %.2fs — label=%s confidence=%.4f",
+                            time.perf_counter() - t0,
+                            video_analysis.get("label"),
+                            video_analysis.get("confidence", 0))
+            except Exception as exc:
+                logger.error("Video ML inference failed: %s", exc)
+                video_analysis = {"label": "unknown", "confidence": 0.0, "error": str(exc)}
+
+            # --- Audio analysis (stub for now) ---
+            try:
+                from utils.preprocessing import extract_audio
+                audio_dir = os.path.join(backend_dir, "data", "processed")
+                audio_path = extract_audio(video_path, audio_dir)
+                audio_analysis = _models["audio"].predict(audio_path)
+                # Clean up audio temp file
+                try:
+                    os.unlink(audio_path)
+                except OSError:
+                    pass
+            except Exception as exc:
+                logger.warning("Audio analysis skipped: %s", exc)
+
+            # --- Metadata-based risk assessment ---
             risk_assessment = _compute_risk_score(metadata)
 
-            # Drift Analysis (now uses correct duration from metadata)
+            # --- Merge ML results into risk score ---
+            if video_analysis and video_analysis.get("label") == "fake":
+                fake_conf = video_analysis.get("confidence", 0)
+                # Reduce authenticity score based on ML fake confidence
+                ml_penalty = int(fake_conf * 60)  # Up to 60 point penalty
+                risk_assessment["authenticity_score"] = max(0, risk_assessment["authenticity_score"] - ml_penalty)
+                risk_assessment["flags"].append({
+                    "label": "Deepfake Detected (ML)",
+                    "detail": f"Model confidence: {fake_conf:.1%}",
+                    "severity": "critical" if fake_conf > 0.7 else "high"
+                })
+                risk_assessment["flag_count"] = len(risk_assessment["flags"])
+                # Recalculate risk level
+                s = risk_assessment["authenticity_score"]
+                risk_assessment["risk_level"] = "low" if s >= 70 else "medium" if s >= 40 else "high"
+
+            # --- Drift Analysis ---
             duration = metadata.get("file_info", {}).get("duration_seconds", 0)
-            drift_data = _generate_drift_data(video_path, duration, {"risk_assessment": risk_assessment})
+            # Use real per-frame scores for drift if available
+            if video_analysis and "per_frame" in video_analysis:
+                per_frame = video_analysis["per_frame"]
+                if per_frame and duration > 0:
+                    num_points = min(20, len(per_frame))
+                    chunk_size = max(1, len(per_frame) // num_points)
+                    drift_data = []
+                    for i in range(0, len(per_frame), chunk_size):
+                        chunk = per_frame[i:i+chunk_size]
+                        # Get real score — prefer "Real" probability, fallback to highest
+                        scores = []
+                        for f in chunk:
+                            real_prob = f.get("Real", f.get("real", None))
+                            if real_prob is None:
+                                # Take the max value as authenticity proxy
+                                real_prob = max(f.values()) if f else 0.5
+                            scores.append(real_prob)
+                        avg_real = sum(scores) / len(scores) if scores else 0.5
+                        t_sec = int((i / len(per_frame)) * duration)
+                        drift_data.append({"t": f"{t_sec}s", "v": int(avg_real * 100)})
+            if not drift_data:
+                drift_data = _generate_drift_data(video_path, duration, {"risk_assessment": risk_assessment})
 
         except Exception as exc:
-            logger.error(f"Analysis error: {exc}")
-            # Fallback metadata if even extraction main failed
+            logger.error("Analysis error: %s", exc)
             metadata = {"error": str(exc)}
-            
+
         finally:
             try:
                 os.unlink(video_path)
             except OSError:
                 pass
 
+    # ── Text / FAISS Processing ─────────────────────────────────────────
+    if query is not None and query.strip():
+        # AI-text detection
+        try:
+            t0 = time.perf_counter()
+            text_analysis = _models["text"].predict(query)
+            logger.info("Text ML inference done in %.2fs — label=%s",
+                        time.perf_counter() - t0, text_analysis.get("label"))
+        except Exception as exc:
+            logger.error("Text ML inference failed: %s", exc)
+            text_analysis = {"label": "unknown", "confidence": 0.0, "error": str(exc)}
+
+        # Fact-check article search
+        try:
+            t0 = time.perf_counter()
+            related_articles = _models["faiss"].search(query)
+            logger.info("FAISS search done in %.2fs — %d articles",
+                        time.perf_counter() - t0, len(related_articles) if related_articles else 0)
+        except Exception as exc:
+            logger.error("FAISS search failed: %s", exc)
+
+        # If text-only (no video), generate risk assessment from text analysis
+        if video is None and text_analysis:
+            ai_prob = text_analysis.get("ai_probability", 0)
+            score = max(0, int((1 - ai_prob) * 100))
+            flags = []
+            if text_analysis.get("label") == "ai-generated":
+                flags.append({
+                    "label": "AI-Generated Text Detected",
+                    "detail": f"AI probability: {ai_prob:.1%}",
+                    "severity": "critical" if ai_prob > 0.8 else "high"
+                })
+            risk_level = "low" if score >= 70 else "medium" if score >= 40 else "high"
+            risk_assessment = {
+                "authenticity_score": score,
+                "risk_level": risk_level,
+                "flags": flags,
+                "flag_count": len(flags),
+            }
+
+    # ── Build summary text ──────────────────────────────────────────────
+    summary_parts = []
+    if video_analysis:
+        vl = video_analysis.get("label", "unknown")
+        vc = video_analysis.get("confidence", 0)
+        summary_parts.append(f"Video: {vl} ({vc:.0%} confidence)")
+    if text_analysis:
+        tl = text_analysis.get("label", "unknown")
+        tc = text_analysis.get("confidence", 0)
+        summary_parts.append(f"Text: {tl} ({tc:.0%} confidence)")
+    if related_articles:
+        summary_parts.append(f"{len(related_articles)} related article(s) found")
+    summary = " | ".join(summary_parts) if summary_parts else "Analysis complete"
+
     # ── Report Generation ───────────────────────────────────────────────
     report: Dict[str, Any] = {
-        "summary": "Analysis complete",
+        "summary": summary,
         "analyzed_at": datetime.now(timezone.utc).isoformat(),
         "score": risk_assessment["authenticity_score"] if risk_assessment else 85,
         "risk_level": risk_assessment["risk_level"] if risk_assessment else "low",
         "metadata": metadata,
         "risk_assessment": risk_assessment,
-        "drift_data": drift_data
+        "drift_data": drift_data,
+        "video_analysis": video_analysis,
+        "audio_analysis": audio_analysis,
+        "text_analysis": text_analysis,
+        "related_articles": related_articles or [],
+        "models_used": "real" if _models.get("_real") else "stub",
     }
 
     # Log to Supabase

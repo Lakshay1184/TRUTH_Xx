@@ -210,7 +210,16 @@ interface Props {
 
 export default function ResultsDashboard({ tab, onReset, fileName, textSnippet, apiResult }: Props) {
   // When we have real API data, use it; otherwise fall back to mock
-  const hasRealData = !!apiResult?.metadata;
+  // Extract ML results from API
+  const videoML = apiResult?.video_analysis;
+  const textML = apiResult?.text_analysis;
+  const relatedArticles = apiResult?.related_articles || [];
+  const isRealModels = apiResult?.models_used === "real";
+
+  // Check if we have ANY real data (metadata OR ML results)
+  const hasMetadata = !!apiResult?.metadata && Object.keys(apiResult.metadata).length > 0;
+  const hasML = !!videoML || !!textML;
+  const hasRealData = hasMetadata || hasML || (apiResult?.score !== undefined);
   const realMeta = apiResult?.metadata || {};
   const realRisk = apiResult?.risk_assessment || {};
   const realScore = apiResult?.score ?? null;
@@ -280,17 +289,83 @@ export default function ResultsDashboard({ tab, onReset, fileName, textSnippet, 
     return items;
   };
 
+
+
+  // Build status text from real data
+  const buildStatus = () => {
+    // 1. Trust ML labels first
+    if (videoML && videoML.label && videoML.label !== "unknown") {
+      if (videoML.label === "fake") return "Deepfake Detected";
+      if (videoML.label === "real") return "Likely Authentic";
+    }
+    if (textML && textML.label && textML.label !== "unknown") {
+      if (textML.label === "ai-generated") return "AI-Generated Text";
+      if (textML.label === "human-written") return "Human-Written";
+    }
+
+    // 2. Fallback to score-based status if ML didn't give a definitive label
+    if (hasRealData && realScore !== null) {
+      if (realScore >= 70) return "Likely Authentic";
+      if (realScore >= 40) return "Suspicious";
+      return "AI-Generated / Manipulated";
+    }
+
+    return mock.status;
+  };
+
+  // Build anomalies from real flags + ML results
+  const buildAnomalies = () => {
+    const items: string[] = [];
+    if (realRisk.flags && realRisk.flags.length > 0) {
+      items.push(...realRisk.flags.map((f: any) => `${f.label}: ${f.detail}`));
+    }
+    if (videoML && videoML.label === "fake" && !items.some(i => i.includes("Deepfake"))) {
+      items.push(`Deepfake Detected: ML model confidence ${(videoML.confidence * 100).toFixed(1)}%`);
+    }
+    if (textML && textML.label === "ai-generated") {
+      items.push(`AI-Generated Text: ${(textML.ai_probability * 100).toFixed(1)}% probability`);
+    }
+    // If we have real data (even if no anomalies), return what we found (could be empty)
+    if (hasRealData) return items;
+
+    // Otherwise fallback to mock
+    return items.length > 0 ? items : mock.anomalies;
+  };
+
+  // Build insights from real ML data
+  const buildInsights = () => {
+    const items: string[] = [];
+    if (videoML && videoML.label && videoML.label !== "unknown") {
+      if (videoML.label === "fake") {
+        items.push(`The deepfake detection model classified this video as FAKE with ${(videoML.confidence * 100).toFixed(1)}% confidence. ${videoML.per_frame ? `${videoML.per_frame.length} frames were analyzed.` : ""}`);
+      } else {
+        items.push(`The deepfake detection model classified this video as REAL with ${(videoML.confidence * 100).toFixed(1)}% confidence. No manipulation artifacts were detected in the analyzed frames.`);
+      }
+    }
+    if (textML && textML.label && textML.label !== "unknown") {
+      if (textML.label === "ai-generated") {
+        items.push(`The AI text detector identified this content as AI-generated with ${(textML.ai_probability * 100).toFixed(1)}% probability. The text shows patterns consistent with large language model output.`);
+      } else {
+        items.push(`The AI text detector identified this content as human-written with ${(textML.human_probability * 100).toFixed(1)}% probability.`);
+      }
+    }
+    if (relatedArticles.length > 0) {
+      const top = relatedArticles[0];
+      items.push(`Found ${relatedArticles.length} related fact-check article(s). Top match: "${top.title || "Untitled"}" (similarity: ${((top.similarity_score || 0) * 100).toFixed(0)}%).`);
+    }
+    return items.length > 0 ? items : mock.insights;
+  };
+
   // Merge real data over mock data
   const result = {
     ...mock,
     score: realScore ?? mock.score,
     risk: (realRiskLevel ?? mock.risk) as "low" | "medium" | "high",
-    status: hasRealData ? (realScore !== null && realScore >= 70 ? "Likely Authentic" : realScore !== null && realScore >= 40 ? "Suspicious" : "AI-Generated / Manipulated") : mock.status,
+    status: buildStatus(),
     confidence: realRisk.authenticity_score ?? mock.confidence,
     fingerprint: buildFingerprint(),
-    anomalies: (realRisk.flags && realRisk.flags.length > 0)
-      ? realRisk.flags.map((f: any) => `${f.label}: ${f.detail}`)
-      : mock.anomalies,
+    anomalies: buildAnomalies(),
+    insights: buildInsights(),
     // Use real drift data from API when available
     driftData: apiResult?.drift_data && apiResult.drift_data.length > 0
       ? apiResult.drift_data
