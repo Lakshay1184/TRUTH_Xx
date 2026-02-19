@@ -29,7 +29,7 @@ interface LiveAlert {
 }
 
 const statusConfig: Record<DetectionStatus, { label: string; color: string; bg: string; border: string; icon: typeof Shield }> = {
-  idle: { label: "Standby", color: "#5a8aaa", bg: "#5a8aaa10", border: "#5a8aaa30", icon: Shield },
+  idle: { label: "Standby", color: "#777777", bg: "#77777710", border: "#77777730", icon: Shield },
   scanning: { label: "Scanning...", color: "#00d4ff", bg: "#00d4ff10", border: "#00d4ff30", icon: Eye },
   safe: { label: "Safe — Authentic", color: "#00ff9d", bg: "#00ff9d10", border: "#00ff9d30", icon: CheckCircle },
   suspicious: { label: "Suspicious Activity", color: "#ffd700", bg: "#ffd70010", border: "#ffd70030", icon: AlertTriangle },
@@ -138,7 +138,7 @@ export default function LiveDetectionPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#020b18]/90 backdrop-blur-sm px-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/90 backdrop-blur-sm px-4"
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -155,23 +155,23 @@ export default function LiveDetectionPage() {
 
               <div className="text-[#ff4444] text-xs font-bold tracking-widest mb-2">CRITICAL ALERT</div>
               <h2 className="text-2xl font-black text-white mb-3">Deepfake Detected!</h2>
-              <p className="text-[#a0c4e0] text-sm mb-6">
+              <p className="text-[#b0b0b0] text-sm mb-6">
                 TRUTH X has identified this video/audio as{" "}
                 <strong className="text-[#ff4444]">AI-generated synthetic media</strong>. This content may be an
                 attempt to deceive, scam, or manipulate you.
               </p>
 
-              <div className="bg-[#050e1a] rounded-xl p-4 mb-6 text-left space-y-2">
+              <div className="bg-[#0a0a0a] rounded-xl p-4 mb-6 text-left space-y-2">
                 <p className="text-[#ffd700] text-xs font-bold">Detected threats:</p>
-                <p className="text-[#a0c4e0] text-xs flex items-center gap-2">
+                <p className="text-[#b0b0b0] text-xs flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ff4444] shrink-0" />
                   Face-swap deepfake artifact in video stream
                 </p>
-                <p className="text-[#a0c4e0] text-xs flex items-center gap-2">
+                <p className="text-[#b0b0b0] text-xs flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ff4444] shrink-0" />
                   AI voice synthesis pattern (ElevenLabs match)
                 </p>
-                <p className="text-[#a0c4e0] text-xs flex items-center gap-2">
+                <p className="text-[#b0b0b0] text-xs flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ffd700] shrink-0" />
                   Confidence: 94% — High certainty
                 </p>
@@ -186,7 +186,7 @@ export default function LiveDetectionPage() {
                 </button>
                 <button
                   onClick={() => setAlertDismissed(true)}
-                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#0d2a40] text-[#5a8aaa] hover:text-white transition-all"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-[#222222] text-[#777777] hover:text-white transition-all"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -201,10 +201,10 @@ export default function LiveDetectionPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-2 h-2 rounded-full bg-red-500 blink" />
-            <span className="text-[#5a8aaa] text-sm">Real-Time Detection Interface</span>
+            <span className="text-[#777777] text-sm">Real-Time Detection Interface</span>
           </div>
           <h1 className="text-4xl font-black text-white mb-2">Live Detection</h1>
-          <p className="text-[#5a8aaa]">
+          <p className="text-[#777777]">
             Simulate real-time deepfake and synthetic voice detection for active calls or live video.
           </p>
         </motion.div>
@@ -214,9 +214,9 @@ export default function LiveDetectionPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Video frame */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <div className="relative glass rounded-2xl overflow-hidden aspect-video border border-[#0d2a40]">
+              <div className="relative glass rounded-2xl overflow-hidden aspect-video border border-[#222222]">
                 {/* Simulated video content */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#050e1a] to-[#020b18] flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] to-[#000000] flex items-center justify-center">
                   {callActive ? (
                     <>
                       {/* Mock face outline */}
@@ -258,14 +258,14 @@ export default function LiveDetectionPage() {
                     </>
                   ) : (
                     <div className="text-center">
-                      <Video className="w-16 h-16 text-[#0d2a40] mx-auto mb-3" />
-                      <p className="text-[#5a8aaa] text-sm">Start a session to begin detection</p>
+                      <Video className="w-16 h-16 text-[#222222] mx-auto mb-3" />
+                      <p className="text-[#777777] text-sm">Start a session to begin detection</p>
                     </div>
                   )}
 
                   {/* Frame counter */}
                   {callActive && (
-                    <div className="absolute top-4 left-4 flex items-center gap-2 bg-[#020b18]/80 rounded-lg px-3 py-1.5">
+                    <div className="absolute top-4 left-4 flex items-center gap-2 bg-[#000000]/80 rounded-lg px-3 py-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-500 blink" />
                       <span className="text-white text-xs font-mono">LIVE {formatElapsed(elapsed)}</span>
                     </div>
@@ -273,8 +273,8 @@ export default function LiveDetectionPage() {
 
                   {/* Frame number */}
                   {callActive && (
-                    <div className="absolute top-4 right-4 bg-[#020b18]/80 rounded px-2 py-1">
-                      <span className="text-[#5a8aaa] text-xs font-mono">Frame #{(videoFrame * 30).toLocaleString()}</span>
+                    <div className="absolute top-4 right-4 bg-[#000000]/80 rounded px-2 py-1">
+                      <span className="text-[#777777] text-xs font-mono">Frame #{(videoFrame * 30).toLocaleString()}</span>
                     </div>
                   )}
 
@@ -297,7 +297,7 @@ export default function LiveDetectionPage() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <Volume2 className="w-4 h-4 text-[#00ff9d]" />
-                  <span className="text-[#a0c4e0] text-sm font-medium">Real-Time Audio Analysis</span>
+                  <span className="text-[#b0b0b0] text-sm font-medium">Real-Time Audio Analysis</span>
                   <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-[#00ff9d]/10 text-[#00ff9d] border border-[#00ff9d]/30">
                     Analyzing
                   </span>
@@ -321,7 +321,7 @@ export default function LiveDetectionPage() {
                     />
                   ))}
                 </div>
-                <div className="mt-3 flex justify-between text-xs text-[#5a8aaa]">
+                <div className="mt-3 flex justify-between text-xs text-[#777777]">
                   <span>Frequency: 8-22kHz</span>
                   <span>Prosody Score: {status === "deepfake" ? "0.12 (Synthetic)" : "0.78 (Natural)"}</span>
                   <span>Sample Rate: 44.1kHz</span>
@@ -339,7 +339,7 @@ export default function LiveDetectionPage() {
               {!callActive ? (
                 <button
                   onClick={startCall}
-                  className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#00ff9d] text-[#020b18] font-black text-lg hover:bg-[#00ff9d]/90 transition-all glow-green"
+                  className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#00ff9d] text-[#000000] font-black text-lg hover:bg-[#00ff9d]/90 transition-all glow-green"
                 >
                   <Phone className="w-6 h-6" />
                   Start Live Detection Session
@@ -384,7 +384,7 @@ export default function LiveDetectionPage() {
                     { label: "Frame Analysis", active: callActive, ok: true },
                     { label: "AI Pattern", active: callActive, ok: status !== "deepfake" && status !== "suspicious" },
                   ].map((check, i) => (
-                    <div key={i} className="bg-[#050e1a] rounded-lg px-3 py-2 border border-[#0d2a40]">
+                    <div key={i} className="bg-[#0a0a0a] rounded-lg px-3 py-2 border border-[#222222]">
                       <div className="flex items-center gap-1.5 mb-1">
                         {check.active ? (
                           check.ok ? (
@@ -393,14 +393,14 @@ export default function LiveDetectionPage() {
                             <AlertTriangle className="w-3 h-3 text-[#ff4444]" />
                           )
                         ) : (
-                          <div className="w-3 h-3 rounded-full border border-[#0d2a40]" />
+                          <div className="w-3 h-3 rounded-full border border-[#222222]" />
                         )}
-                        <span className="text-[#5a8aaa] text-xs">{check.label}</span>
+                        <span className="text-[#777777] text-xs">{check.label}</span>
                       </div>
                       <span
                         className="text-xs font-bold"
                         style={{
-                          color: !check.active ? "#5a8aaa" : check.ok ? "#00ff9d" : "#ff4444",
+                          color: !check.active ? "#777777" : check.ok ? "#00ff9d" : "#ff4444",
                         }}
                       >
                         {!check.active ? "Standby" : check.ok ? "CLEAR" : "FLAGGED"}
@@ -426,10 +426,10 @@ export default function LiveDetectionPage() {
                   ].map((metric, i) => (
                     <div key={i}>
                       <div className="flex justify-between mb-1">
-                        <span className="text-[#5a8aaa] text-xs">{metric.label}</span>
+                        <span className="text-[#777777] text-xs">{metric.label}</span>
                         <span className="text-xs font-bold" style={{ color: metric.color }}>{metric.value}%</span>
                       </div>
-                      <div className="w-full bg-[#0d2137] rounded-full h-1.5">
+                      <div className="w-full bg-[#1a1a1a] rounded-full h-1.5">
                         <motion.div
                           className="h-1.5 rounded-full transition-all duration-500"
                           style={{ background: metric.color, width: `${metric.value}%` }}
@@ -444,8 +444,8 @@ export default function LiveDetectionPage() {
             {/* Live Alert Log */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <div className="glass rounded-xl overflow-hidden">
-                <div className="flex items-center gap-2 px-5 py-4 border-b border-[#0d2a40]">
-                  <Clock className="w-4 h-4 text-[#5a8aaa]" />
+                <div className="flex items-center gap-2 px-5 py-4 border-b border-[#222222]">
+                  <Clock className="w-4 h-4 text-[#777777]" />
                   <span className="text-white font-semibold text-sm">Alert Log</span>
                   {alerts.length > 0 && (
                     <span className="ml-auto text-xs text-[#5a8aaa] bg-[#0d2137] px-2 py-0.5 rounded-full">

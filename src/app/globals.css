@@ -23,45 +23,39 @@
 }
 
 :root {
-  /* Premium Dark Theme Palette */
+  /* Black Obsidian Theme Palette */
   --radius: 0.75rem;
 
-  /* Deep Blue/Black Backgrounds */
-  --background: #020617;
-  /* Slate 950/Black mix */
-  --foreground: #f8fafc;
-  /* Slate 50 */
+  /* Pure Black Obsidian Backgrounds */
+  --background: #000000;
+  --foreground: #f0f0f0;
 
-  /* Glassy Cards */
-  --card: rgba(15, 23, 42, 0.6);
-  /* Slate 900 with opacity */
-  --card-foreground: #f8fafc;
+  /* Glassy Cards — black tinted glass */
+  --card: rgba(10, 10, 10, 0.7);
+  --card-foreground: #f0f0f0;
 
-  --popover: #0f172a;
-  --popover-foreground: #f8fafc;
+  --popover: #0a0a0a;
+  --popover-foreground: #f0f0f0;
 
   /* Vibrant Cyan Primary */
   --primary: #00d4ff;
-  --primary-foreground: #020617;
+  --primary-foreground: #000000;
 
-  /* Secondary/Muted */
-  --secondary: #1e293b;
-  /* Slate 800 */
-  --secondary-foreground: #94a3b8;
-  /* Slate 400 */
+  /* Secondary/Muted — neutral grays, not blue */
+  --secondary: #161616;
+  --secondary-foreground: #a0a0a0;
 
-  --muted: #0f172a;
-  --muted-foreground: #64748b;
-  /* Slate 500 */
+  --muted: #0a0a0a;
+  --muted-foreground: #666666;
 
-  --accent: #1e293b;
+  --accent: #161616;
   --accent-foreground: #00d4ff;
 
   --destructive: #ef4444;
-  --destructive-foreground: #f8fafc;
+  --destructive-foreground: #f0f0f0;
 
-  --border: rgba(148, 163, 184, 0.1);
-  --input: rgba(148, 163, 184, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
   --ring: rgba(0, 212, 255, 0.5);
 
   /* Chart Colors */
@@ -81,25 +75,25 @@
     background-color: var(--background);
     color: var(--foreground);
     background-image:
-      radial-gradient(circle at 15% 50%, rgba(0, 212, 255, 0.05), transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(0, 255, 157, 0.05), transparent 25%);
+      radial-gradient(circle at 15% 50%, rgba(0, 212, 255, 0.03), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(0, 255, 157, 0.03), transparent 25%);
     background-attachment: fixed;
   }
 }
 
 /* Custom Utilities */
 .glass-dark {
-  background: rgba(2, 6, 23, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(10, 10, 10, 0.5);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Scrollbar */

@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen bg-[#020b18] text-white selection:bg-cyan-500/30 overflow-x-hidden`}>
+      <body className={`${inter.className} min-h-screen bg-black text-white selection:bg-cyan-500/30 overflow-x-hidden`}>
         <AuthProvider>
           <AgentScene />
           <Navbar />

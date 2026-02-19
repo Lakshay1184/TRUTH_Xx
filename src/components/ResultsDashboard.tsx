@@ -405,9 +405,9 @@ export default function ResultsDashboard({ tab, onReset, fileName, textSnippet, 
               style.id = "print-styles";
               style.textContent = `
                 @media print {
-                  body { background: #020b18 !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                  body { background: #000000 !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                   nav, .glass-button, button, canvas { display: none !important; }
-                  .glass-card, .glass-panel { border: 1px solid #1a3a5c !important; background: #0a1929 !important; }
+                  .glass-card, .glass-panel { border: 1px solid #333333 !important; background: #0a0a0a !important; }
                   @page { size: A4; margin: 1cm; }
                 }
               `;
@@ -621,7 +621,7 @@ export default function ResultsDashboard({ tab, onReset, fileName, textSnippet, 
             <div className="relative pl-4 space-y-6 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-gradient-to-b before:from-cyan-500 before:to-transparent">
               {result.timeline.slice(0, 4).map((item, i) => (
                 <div key={i} className="relative">
-                  <div className={`absolute -left-[21px] top-1 w-3 h-3 rounded-full border-2 border-[#020b18] ${item.suspicious ? "bg-red-500" : "bg-cyan-500"}`} />
+                  <div className={`absolute -left-[21px] top-1 w-3 h-3 rounded-full border-2 border-[#000000] ${item.suspicious ? "bg-red-500" : "bg-cyan-500"}`} />
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-white text-sm font-medium">{item.label}</p>
@@ -673,7 +673,7 @@ export default function ResultsDashboard({ tab, onReset, fileName, textSnippet, 
                 <XAxis dataKey="t" stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
                 <YAxis stroke="#475569" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: '#111111', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '12px' }}
                   itemStyle={{ color: '#fff' }}
                 />
                 <Area type="monotone" dataKey="v" stroke={scoreColor} strokeWidth={3} fillOpacity={1} fill="url(#colorAuth)" />

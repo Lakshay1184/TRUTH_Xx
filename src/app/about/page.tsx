@@ -77,7 +77,7 @@ export default function AboutPage() {
               Fighting AI Deception<br />
               <span className="text-gradient-cyan">For Everyone</span>
             </h1>
-            <p className="text-[#a0c4e0] text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-[#b0b0b0] text-lg leading-relaxed max-w-2xl mx-auto">
               TRUTH X was built to give every person — regardless of technical skill — the ability to detect
               AI manipulation, deepfake fraud, and misinformation before it causes harm.
             </p>
@@ -141,7 +141,7 @@ export default function AboutPage() {
                   <h3 className="text-white font-bold text-lg mb-4">{card.title}</h3>
                   <ul className="space-y-2">
                     {card.points.map((point, j) => (
-                      <li key={j} className="flex items-start gap-2 text-[#a0c4e0] text-sm">
+                      <li key={j} className="flex items-start gap-2 text-[#b0b0b0] text-sm">
                         <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: card.color }} />
                         {point}
                       </li>
@@ -157,7 +157,7 @@ export default function AboutPage() {
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-white mb-3">Who Uses TRUTH X</h2>
-            <p className="text-[#5a8aaa]">Designed for real-world users facing real threats</p>
+            <p className="text-[#777777]">Designed for real-world users facing real threats</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
@@ -200,7 +200,7 @@ export default function AboutPage() {
                     <Icon className="w-6 h-6" style={{ color: user.color }} />
                   </div>
                   <h3 className="text-white font-bold text-lg mb-3">{user.title}</h3>
-                  <p className="text-[#5a8aaa] text-sm leading-relaxed mb-4">{user.desc}</p>
+                  <p className="text-[#777777] text-sm leading-relaxed mb-4">{user.desc}</p>
                   <div
                     className="text-xs px-3 py-1.5 rounded-full border"
                     style={{ color: user.color, background: `${user.color}10`, borderColor: `${user.color}30` }}
@@ -217,7 +217,7 @@ export default function AboutPage() {
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-white mb-3">How TRUTH X Works</h2>
-            <p className="text-[#5a8aaa]">From upload to verified result in under 5 seconds</p>
+            <p className="text-[#777777]">From upload to verified result in under 5 seconds</p>
           </div>
           <div className="space-y-4">
             {howItWorks.map((step, i) => (
@@ -237,7 +237,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="text-white font-bold mb-1">{step.title}</h3>
-                  <p className="text-[#5a8aaa] text-sm leading-relaxed">{step.desc}</p>
+                  <p className="text-[#777777] text-sm leading-relaxed">{step.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -248,7 +248,7 @@ export default function AboutPage() {
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-white mb-3">Detection Technology</h2>
-            <p className="text-[#5a8aaa]">Six specialized AI models running simultaneously on every analysis</p>
+            <p className="text-[#777777]">Six specialized AI models running simultaneously on every analysis</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {techStack.map((tech, i) => {
@@ -270,7 +270,7 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium text-sm">{tech.name}</p>
-                    <p className="text-[#5a8aaa] text-xs mt-0.5">{tech.role}</p>
+                    <p className="text-[#777777] text-xs mt-0.5">{tech.role}</p>
                   </div>
                 </motion.div>
               );
@@ -301,7 +301,7 @@ export default function AboutPage() {
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle className="w-4 h-4 text-[#00ff9d] mt-0.5 shrink-0" />
-                  <p className="text-[#a0c4e0] text-sm">{item.text}</p>
+                  <p className="text-[#b0b0b0] text-sm">{item.text}</p>
                 </div>
               ))}
             </div>
@@ -318,13 +318,13 @@ export default function AboutPage() {
             <h2 className="text-3xl font-black text-white mb-4">
               Ready to Verify the Truth?
             </h2>
-            <p className="text-[#5a8aaa] mb-8">
+            <p className="text-[#777777] mb-8">
               No signup. No cost. Just upload and see the truth.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/analyze"
-                className="group flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#00d4ff] text-[#020b18] font-bold text-lg hover:bg-[#00d4ff]/90 transition-all glow-cyan"
+                className="group flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-[#00d4ff] text-[#000000] font-bold text-lg hover:bg-[#00d4ff]/90 transition-all glow-cyan"
               >
                 <Shield className="w-5 h-5" />
                 Start Free Analysis
@@ -332,7 +332,7 @@ export default function AboutPage() {
               </Link>
               <Link
                 href="/live"
-                className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl border border-[#0d2a40] text-[#a0c4e0] font-bold text-lg hover:border-[#00d4ff]/30 hover:text-white transition-all"
+                className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl border border-[#222222] text-[#b0b0b0] font-bold text-lg hover:border-[#00d4ff]/30 hover:text-white transition-all"
               >
                 <Zap className="w-5 h-5" />
                 Try Live Detection
@@ -343,17 +343,17 @@ export default function AboutPage() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-[#0d2a40] py-8 mt-16">
+      <footer className="border-t border-[#222222] py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-[#00d4ff]" />
             <span className="text-white font-bold">TRUTH X</span>
-            <span className="text-[#5a8aaa] text-sm">— AI Deepfake & Misinformation Detection</span>
+            <span className="text-[#777777] text-sm">— AI Deepfake & Misinformation Detection</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-[#5a8aaa] text-sm">v2.4.1</span>
-            <span className="text-[#0d2a40]">|</span>
-            <span className="text-[#5a8aaa] text-sm">Frontend demonstration</span>
+            <span className="text-[#777777] text-sm">v2.4.1</span>
+            <span className="text-[#222222]">|</span>
+            <span className="text-[#777777] text-sm">Frontend demonstration</span>
           </div>
         </div>
       </footer>

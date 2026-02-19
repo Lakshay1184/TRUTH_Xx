@@ -151,10 +151,10 @@ export default function AnalyzePage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <Shield className="w-5 h-5 text-[#00d4ff]" />
-            <span className="text-[#5a8aaa] text-sm">TRUTH X — Multimodal Analysis Engine</span>
+            <span className="text-[#777777] text-sm">TRUTH X — Multimodal Analysis Engine</span>
           </div>
           <h1 className="text-4xl font-black text-white mb-2">Analyze Content</h1>
-          <p className="text-[#5a8aaa]">
+          <p className="text-[#777777]">
             Upload a file, paste text, or enter a URL to check for AI manipulation, deepfakes, or misinformation.
           </p>
         </motion.div>
@@ -256,7 +256,7 @@ export default function AnalyzePage() {
                   ? "border-[#00d4ff] bg-[#00d4ff]/5"
                   : uploadedFile
                     ? "border-[#00d4ff]/40 bg-[#00d4ff]/5 cursor-default"
-                    : "border-[#0d2a40] hover:border-[#00d4ff]/30 hover:bg-[#00d4ff]/3"
+                    : "border-[#222222] hover:border-[#00d4ff]/30 hover:bg-[#00d4ff]/3"
                   }`}
               >
                 <input
@@ -279,7 +279,7 @@ export default function AnalyzePage() {
                     </div>
                     <div>
                       <p className="text-white font-semibold">{uploadedFile.name}</p>
-                      <p className="text-[#5a8aaa] text-sm">
+                      <p className="text-[#777777] text-sm">
                         {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB — Ready for analysis
                       </p>
                     </div>
@@ -301,7 +301,7 @@ export default function AnalyzePage() {
                     <p className="text-white font-semibold mb-1">
                       Drop your {activeTab} file here
                     </p>
-                    <p className="text-[#5a8aaa] text-sm mb-4">
+                    <p className="text-[#777777] text-sm mb-4">
                       or click to browse — supports{" "}
                       {activeTab === "video" ? "MP4, MOV, AVI, WebM" : activeTab === "audio" ? "MP3, WAV, M4A, OGG" : "JPG, PNG, WEBP, GIF"}
                     </p>
@@ -320,20 +320,20 @@ export default function AnalyzePage() {
             {activeTab === "text" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl overflow-hidden">
-                  <div className="px-4 py-3 border-b border-[#0d2a40] flex items-center gap-2">
+                  <div className="px-4 py-3 border-b border-[#222222] flex items-center gap-2">
                     <FileText className="w-4 h-4 text-[#a855f7]" />
-                    <span className="text-[#a0c4e0] text-sm font-medium">Paste Text Content</span>
+                    <span className="text-[#b0b0b0] text-sm font-medium">Paste Text Content</span>
                   </div>
                   <textarea
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
                     placeholder="Paste an article, social media post, message, or any text content you want to verify for AI generation or misinformation..."
-                    className="w-full bg-transparent px-4 py-4 text-[#e2f0ff] placeholder-[#2a4a62] text-sm outline-none resize-none h-48"
+                    className="w-full bg-transparent px-4 py-4 text-[#e0e0e0] placeholder-[#444444] text-sm outline-none resize-none h-48"
                   />
-                  <div className="px-4 py-2 border-t border-[#0d2a40] flex justify-between">
-                    <span className="text-[#5a8aaa] text-xs">{textInput.length} characters</span>
+                  <div className="px-4 py-2 border-t border-[#222222] flex justify-between">
+                    <span className="text-[#777777] text-xs">{textInput.length} characters</span>
                     {textInput && (
-                      <button onClick={() => setTextInput("")} className="text-[#5a8aaa] text-xs hover:text-[#ff4444]">
+                      <button onClick={() => setTextInput("")} className="text-[#777777] text-xs hover:text-[#ff4444]">
                         Clear
                       </button>
                     )}
@@ -345,9 +345,9 @@ export default function AnalyzePage() {
             {/* URL input */}
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <LinkIcon className="w-4 h-4 text-[#a0c4e0]" />
-                <span className="text-[#a0c4e0] text-sm font-medium">Verify by URL</span>
-                <span className="text-xs text-[#5a8aaa]">(articles, social posts, news links)</span>
+                <LinkIcon className="w-4 h-4 text-[#b0b0b0]" />
+                <span className="text-[#b0b0b0] text-sm font-medium">Verify by URL</span>
+                <span className="text-xs text-[#777777]">(articles, social posts, news links)</span>
               </div>
               <div className="flex gap-2">
                 <input
@@ -355,11 +355,11 @@ export default function AnalyzePage() {
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
                   placeholder="https://example.com/article-to-verify"
-                  className="flex-1 bg-[#050e1a] border border-[#0d2a40] rounded-lg px-4 py-2.5 text-[#e2f0ff] placeholder-[#2a4a62] text-sm outline-none focus:border-[#00d4ff]/50"
+                  className="flex-1 bg-[#0a0a0a] border border-[#222222] rounded-lg px-4 py-2.5 text-[#e0e0e0] placeholder-[#444444] text-sm outline-none focus:border-[#00d4ff]/50"
                 />
                 <button
                   disabled={!urlInput}
-                  className="px-4 py-2.5 rounded-lg bg-[#0d2137] border border-[#0d2a40] text-[#a0c4e0] text-sm hover:border-[#00d4ff]/30 disabled:opacity-40"
+                  className="px-4 py-2.5 rounded-lg bg-[#1a1a1a] border border-[#222222] text-[#b0b0b0] text-sm hover:border-[#00d4ff]/30 disabled:opacity-40"
                 >
                   Load
                 </button>
@@ -372,7 +372,7 @@ export default function AnalyzePage() {
               whileTap={{ scale: 0.99 }}
               onClick={analyzeFile}
               disabled={!uploadedFile && !textInput.trim() && !urlInput.trim()}
-              className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#00d4ff] text-[#020b18] font-black text-lg disabled:opacity-30 disabled:cursor-not-allowed glow-cyan transition-all hover:bg-[#00d4ff]/90"
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#00d4ff] text-[#000000] font-black text-lg disabled:opacity-30 disabled:cursor-not-allowed glow-cyan transition-all hover:bg-[#00d4ff]/90"
             >
               <Shield className="w-6 h-6" />
               Analyze Content
@@ -404,8 +404,8 @@ export default function AnalyzePage() {
                   <div key={i} className="flex items-start gap-3">
                     <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: item.color }} />
                     <div>
-                      <p className="text-[#a0c4e0] text-xs font-medium">{item.label}</p>
-                      <p className="text-[#5a8aaa] text-xs">{item.desc}</p>
+                      <p className="text-[#b0b0b0] text-xs font-medium">{item.label}</p>
+                      <p className="text-[#777777] text-xs">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -417,21 +417,21 @@ export default function AnalyzePage() {
                 <AlertTriangle className="w-4 h-4 text-[#ffd700]" />
                 <span className="text-[#ffd700] font-semibold text-sm">Privacy Notice</span>
               </div>
-              <p className="text-[#5a8aaa] text-xs leading-relaxed">
+              <p className="text-[#777777] text-xs leading-relaxed">
                 Uploaded content is processed in an isolated environment and permanently deleted after analysis.
                 No data is stored or shared with third parties.
               </p>
             </div>
 
             <div className="glass rounded-xl p-5">
-              <div className="text-[#5a8aaa] text-xs mb-3 font-medium uppercase tracking-wider">Recent analyses</div>
+              <div className="text-[#777777] text-xs mb-3 font-medium uppercase tracking-wider">Recent analyses</div>
               {[
                 { name: "video_clip_01.mp4", score: 23, status: "AI-Generated" },
                 { name: "news_article.txt", score: 78, status: "Mostly Authentic" },
                 { name: "photo_share.jpg", score: 91, status: "Authentic" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-[#0d2a40] last:border-0">
-                  <span className="text-[#a0c4e0] text-xs truncate max-w-[120px]">{item.name}</span>
+                <div key={i} className="flex items-center justify-between py-2 border-b border-[#222222] last:border-0">
+                  <span className="text-[#b0b0b0] text-xs truncate max-w-[120px]">{item.name}</span>
                   <span
                     className="text-xs font-bold"
                     style={{ color: item.score < 40 ? "#ff4444" : item.score < 70 ? "#ffd700" : "#00ff9d" }}

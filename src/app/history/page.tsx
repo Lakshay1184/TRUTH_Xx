@@ -215,10 +215,10 @@ export default function HistoryPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <Clock className="w-5 h-5 text-[#00d4ff]" />
-            <span className="text-[#5a8aaa] text-sm">Detection Log</span>
+            <span className="text-[#777777] text-sm">Detection Log</span>
           </div>
           <h1 className="text-4xl font-black text-white mb-2">Analysis History</h1>
-          <p className="text-[#5a8aaa]">Review all previously analyzed content with full detection reports.</p>
+          <p className="text-[#777777]">Review all previously analyzed content with full detection reports.</p>
         </motion.div>
 
         {/* Stats row */}
@@ -236,7 +236,7 @@ export default function HistoryPage() {
           ].map((stat, i) => (
             <div key={i} className="glass rounded-xl px-5 py-4 flex items-center justify-between">
               <div>
-                <p className="text-[#5a8aaa] text-xs mb-1">{stat.label}</p>
+                <p className="text-[#777777] text-xs mb-1">{stat.label}</p>
                 <p className="text-2xl font-black" style={{ color: stat.color }}>{stat.value}</p>
               </div>
               <div className="w-10 h-10 rounded-full" style={{ background: `${stat.color}15`, border: `1px solid ${stat.color}30` }}>
@@ -259,13 +259,13 @@ export default function HistoryPage() {
         >
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5a8aaa]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#777777]" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by filename, status, or content..."
-              className="w-full bg-[#071525] border border-[#0d2a40] rounded-xl pl-10 pr-4 py-3 text-[#e2f0ff] placeholder-[#2a4a62] text-sm outline-none focus:border-[#00d4ff]/40"
+              className="w-full bg-[#0a0a0a] border border-[#222222] rounded-xl pl-10 pr-4 py-3 text-[#e0e0e0] placeholder-[#444444] text-sm outline-none focus:border-[#00d4ff]/40"
             />
           </div>
 
@@ -277,7 +277,7 @@ export default function HistoryPage() {
                 onClick={() => setFilterStatus(opt.value)}
                 className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border ${filterStatus === opt.value
                   ? "bg-[#00d4ff]/10 text-[#00d4ff] border-[#00d4ff]/30"
-                  : "text-[#5a8aaa] border-[#0d2a40] hover:border-[#00d4ff]/20 hover:text-[#a0c4e0]"
+                  : "text-[#777777] border-[#222222] hover:border-[#00d4ff]/20 hover:text-[#b0b0b0]"
                   }`}
               >
                 {opt.label}
@@ -287,11 +287,11 @@ export default function HistoryPage() {
 
           {/* Sort */}
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-[#5a8aaa]" />
+            <SlidersHorizontal className="w-4 h-4 text-[#777777]" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="bg-[#071525] border border-[#0d2a40] rounded-lg px-3 py-2 text-[#a0c4e0] text-xs outline-none focus:border-[#00d4ff]/40"
+              className="bg-[#0a0a0a] border border-[#222222] rounded-lg px-3 py-2 text-[#b0b0b0] text-xs outline-none focus:border-[#00d4ff]/40"
             >
               <option value="date">Sort: Latest</option>
               <option value="score">Sort: Score</option>
@@ -302,9 +302,9 @@ export default function HistoryPage() {
 
         {/* Results count */}
         <div className="flex items-center gap-2 mb-4">
-          <Filter className="w-4 h-4 text-[#5a8aaa]" />
-          <span className="text-[#5a8aaa] text-sm">
-            Showing <span className="text-[#a0c4e0] font-medium">{filtered.length}</span> results
+          <Filter className="w-4 h-4 text-[#777777]" />
+          <span className="text-[#777777] text-sm">
+            Showing <span className="text-[#b0b0b0] font-medium">{filtered.length}</span> results
           </span>
         </div>
 
@@ -312,8 +312,8 @@ export default function HistoryPage() {
         <div className="space-y-3">
           {filtered.length === 0 ? (
             <div className="text-center py-16 glass rounded-xl">
-              <Shield className="w-12 h-12 text-[#0d2a40] mx-auto mb-4" />
-              <p className="text-[#5a8aaa]">No results match your search</p>
+              <Shield className="w-12 h-12 text-[#222222] mx-auto mb-4" />
+              <p className="text-[#777777]">No results match your search</p>
             </div>
           ) : (
             filtered.map((item, i) => {
@@ -331,7 +331,7 @@ export default function HistoryPage() {
                   transition={{ delay: i * 0.04 }}
                 >
                   <div
-                    className={`glass rounded-xl border transition-all cursor-pointer ${isSelected ? "border-[#00d4ff]/30" : "border-[#0d2a40] hover:border-[#0d2a40]/80"
+                    className={`glass rounded-xl border transition-all cursor-pointer ${isSelected ? "border-[#00d4ff]/30" : "border-[#222222] hover:border-[#222222]/80"
                       }`}
                     onClick={() => setSelected(isSelected ? null : item.id)}
                   >
@@ -355,13 +355,13 @@ export default function HistoryPage() {
                             {item.risk.toUpperCase()} RISK
                           </span>
                         </div>
-                        <p className="text-[#5a8aaa] text-xs mt-0.5 truncate">{item.summary}</p>
+                        <p className="text-[#777777] text-xs mt-0.5 truncate">{item.summary}</p>
                       </div>
 
                       {/* Score */}
                       <div className="text-center shrink-0 hidden sm:block">
                         <div className="text-xl font-black" style={{ color: scoreColor }}>{item.score}%</div>
-                        <div className="text-[#5a8aaa] text-xs">Authentic</div>
+                        <div className="text-[#777777] text-xs">Authentic</div>
                       </div>
 
                       {/* Status */}
@@ -373,17 +373,17 @@ export default function HistoryPage() {
                         ) : (
                           <XCircle className="w-4 h-4 text-[#ff4444]" />
                         )}
-                        <span className="text-[#a0c4e0] text-xs font-medium">{item.status}</span>
+                        <span className="text-[#b0b0b0] text-xs font-medium">{item.status}</span>
                       </div>
 
                       {/* Date */}
                       <div className="text-right shrink-0 hidden lg:block">
-                        <div className="text-[#a0c4e0] text-xs">{item.date}</div>
-                        <div className="text-[#5a8aaa] text-xs">{item.time}</div>
+                        <div className="text-[#b0b0b0] text-xs">{item.date}</div>
+                        <div className="text-[#777777] text-xs">{item.time}</div>
                       </div>
 
                       <ChevronRight
-                        className={`w-4 h-4 text-[#5a8aaa] transition-transform shrink-0 ${isSelected ? "rotate-90" : ""}`}
+                        className={`w-4 h-4 text-[#777777] transition-transform shrink-0 ${isSelected ? "rotate-90" : ""}`}
                       />
                     </div>
 
@@ -392,17 +392,17 @@ export default function HistoryPage() {
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
-                        className="border-t border-[#0d2a40] px-4 pb-4 pt-3"
+                        className="border-t border-[#222222] px-4 pb-4 pt-3"
                       >
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="sm:col-span-2">
-                            <p className="text-[#5a8aaa] text-xs font-medium mb-1">Full Summary</p>
-                            <p className="text-[#a0c4e0] text-sm">{item.summary}</p>
+                            <p className="text-[#777777] text-xs font-medium mb-1">Full Summary</p>
+                            <p className="text-[#b0b0b0] text-sm">{item.summary}</p>
                           </div>
                           <div className="flex gap-2">
                             <a
                               href="/analyze"
-                              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00d4ff] text-[#020b18] text-xs font-bold hover:bg-[#00d4ff]/90 transition-all"
+                              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00d4ff] text-[#000000] text-xs font-bold hover:bg-[#00d4ff]/90 transition-all"
                             >
                               <Shield className="w-3 h-3" /> Re-Analyze
                             </a>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Shield, Zap, History, Info, Menu, X, ChevronRight } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -16,7 +16,25 @@ const navLinks = [
 export default function Navbar() {
     const pathname = usePathname();
     const { user, logout } = useAuth();
-    const [isOpen, setIsOpen] = useState(false); // Mobile menu state
+    const [isOpen, setIsOpen] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    const lastScrollY = useRef(0);
+
+    useEffect(() => {
+        const onScroll = () => {
+            const y = window.scrollY;
+            // Hide when scrolling down past 60px, show when scrolling up
+            if (y > lastScrollY.current && y > 60) {
+                setHidden(true);
+                setIsOpen(false); // close mobile menu too
+            } else {
+                setHidden(false);
+            }
+            lastScrollY.current = y;
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
 
     // Hide navbar on auth pages
     if (pathname === "/login" || pathname === "/signup") return null;
@@ -26,7 +44,7 @@ export default function Navbar() {
             <motion.nav
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="fixed top-0 left-0 right-0 z-50 px-4 py-4 md:px-6"
+                className={`fixed top-0 left-0 right-0 z-50 px-4 py-4 md:px-6 transition-transform duration-300 ${hidden ? "-translate-y-full" : "translate-y-0"}`}
             >
                 <div className="max-w-7xl mx-auto flex items-center justify-between p-4 rounded-2xl glass-panel relative overflow-hidden">
                     {/* Animated Glow Line */}
